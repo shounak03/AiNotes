@@ -23,13 +23,13 @@ export default function Header() {
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
+              <Button variant="ghost" size="icon" className="rounded-full border-2 border-gray-600">
                 <img
-                  src="/placeholder.svg?height=32&width=32"
+                  src="/zen.jpeg"
                   alt="User profile"
                   className="rounded-full"
-                  width={32}
-                  height={32}
+                  width={42}
+                  height={42}
                 />
               </Button>
             </DropdownMenuTrigger>
