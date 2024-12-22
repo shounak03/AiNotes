@@ -1,4 +1,4 @@
-'use client'
+
 
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -8,19 +8,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Book, Settings, LogOut } from 'lucide-react'
+import { Settings, LogOut } from 'lucide-react'
+import { createClient } from '@/utils/supabase/server'
+import { logout } from '@/app/auth/action'
 
-export default function Header() {
+
+export default async function Header() {
+
+  const supabase = await createClient()
+
+
+    const { data: { user } } = await supabase.auth.getUser()
+    
+    console.log("user = ", user);
+
+
   return (
     <header className="bg-white shadow-sm">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold text-primary">
           AI Notes
         </Link>
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon">
-            <Book className="h-5 w-5" />
-          </Button>
+        {user!==null ? (
+          <div className="flex items-center space-x-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full border-2 border-gray-600">
@@ -43,11 +53,31 @@ export default function Header() {
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
+                <form action={async()=>{
+                    'use server'
+                    await logout();
+                }}>
+
+                  <button>Log out</button>
+                </form>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+        ) 
+        : 
+        (
+          <div>
+            <Link href="/auth/login">
+              <Button size={"sm"} type='submit' variant={"outline"} 
+                  className={"bg-primary text-primary-foreground hover:bg-white hover:text-black"}>
+                  Login
+              </Button>
+            </Link>
+          </div>
+        )
+        }
+        
       </div>
     </header>
   )

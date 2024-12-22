@@ -2,7 +2,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
-
+import {Toaster} from 'sonner'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -23,8 +23,11 @@ export default function RootLayout({
           <main className="flex-grow container mx-auto px-4 py-8">
             {children}
           </main>
+          <Toaster />
           <Footer />
         </div>
+        
+
       </body>
     </html>
   )
