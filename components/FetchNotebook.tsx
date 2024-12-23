@@ -27,8 +27,8 @@ export default function FetchNotebook() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     {notes?.map((data) => (
-        <Link href={`/notebook/${data?.id}`} key={data?.id}>
-            <Card className="hover:shadow-md transition-shadow">
+        <Link  href={{pathname:`/notebook/${(data?.name)}`,query:{id:data?.id},}} as={`/notebook/${(data?.name)}-${data?.id}`} key={data?.id}>
+            <Card className="hover:shadow-md transition-shadow hover:bg-gray-200">
                 <CardHeader>
                     <CardTitle>{data?.name}</CardTitle>
                 </CardHeader>
@@ -40,4 +40,4 @@ export default function FetchNotebook() {
     ))}
 </div>
   )
-}
+}   
