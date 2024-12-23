@@ -1,5 +1,3 @@
-
-
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,8 +17,7 @@ export default async function Header() {
 
 
     const { data: { user } } = await supabase.auth.getUser()
-    
-    console.log("user = ", user);
+
 
 
   return (
