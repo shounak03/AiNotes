@@ -8,9 +8,13 @@ import { Plus, Share2 } from 'lucide-react'
 import AskAIButton from '@/components/AskAIButton'
 import ShareButton from '@/components/ShareButton'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 
 
+interface Page {
+  id: number
+  title: string
+  content: string
+}
 
 type Props = {
   params: {
@@ -29,10 +33,11 @@ const notebook = {
 
 
 
-export default function getServerSideProps({params}:Props,) {
+export default function getServerSideProps({params}:Props) {
 
   const [name, setName] = useState<string>("");
   const [notebookId, setnotebookId] = useState<string>("");
+  const [pageHistory, setPageHistory] = useState<Page[] | null>([]);
   const [isPublic, setIsPublic] = useState(notebook.isPublic)
   
 
@@ -42,26 +47,36 @@ export default function getServerSideProps({params}:Props,) {
     
     const [before, ...afterParts] = name.split('-');
     const after = afterParts.join('-');
-    setnotebookId(after);
+    
+    
     setName(before.replaceAll("%20"," "));
-
-
+    return after;
   }
+    
+
+
   const fetchPages = async () => {
-    const response = await fetch(`/api/page?${notebookId}`)
+   
+    const response = await fetch(`/api/page?notebookId=${notebookId}`);
     const data = await response.json()
     console.log(data);
+    
+    setPageHistory(data);
     
   }
 
   useEffect(() => {
-    getParams()
+    getParams().then((after) => {
+      setnotebookId(after);
+    });
   },[]);
+
   
   useEffect(() => {
-    fetchPages();
-  },[]);
-  
+    if (notebookId) { 
+      fetchPages();
+    }
+  }, [notebookId]); 
   
 
   const handleTogglePublic = () => {

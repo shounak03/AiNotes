@@ -107,16 +107,15 @@ export async function POST(req: NextRequest) {
 }
 export async function GET(req: NextRequest) {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+
+    const notebook_id = req.nextUrl.searchParams.get('notebookId');
+    console.log('notebook_id:', notebook_id);
 
     try {
         const { data, error } = await supabase
             .from('pages')
             .select('*')
-            .eq('user_id', user.id);
+            .eq('notebook_id', notebook_id);
         if (error)
             return NextResponse.json({ success: false, error, message: "Error fetching notes" }, { status: 500 });
         return NextResponse.json({ sucess: true, data });
