@@ -27,9 +27,13 @@ const notebook = {
   ],
 }
 
+
+
 export default function getServerSideProps({params}:Props,) {
 
   const [name, setName] = useState<string>("");
+  const [notebookId, setnotebookId] = useState<string>("");
+  const [isPublic, setIsPublic] = useState(notebook.isPublic)
   
 
   const getParams = async() => {
@@ -38,17 +42,27 @@ export default function getServerSideProps({params}:Props,) {
     
     const [before, ...afterParts] = name.split('-');
     const after = afterParts.join('-');
-    console.log(after);
+    setnotebookId(after);
     setName(before.replaceAll("%20"," "));
 
 
   }
+  const fetchPages = async () => {
+    const response = await fetch(`/api/page?${notebookId}`)
+    const data = await response.json()
+    console.log(data);
+    
+  }
+
   useEffect(() => {
     getParams()
   },[]);
   
+  useEffect(() => {
+    fetchPages();
+  },[]);
   
-  const [isPublic, setIsPublic] = useState(notebook.isPublic)
+  
 
   const handleTogglePublic = () => {
     setIsPublic(!isPublic)
