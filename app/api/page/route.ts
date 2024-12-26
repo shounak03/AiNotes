@@ -115,7 +115,8 @@ export async function GET(req: NextRequest) {
         const { data, error } = await supabase
             .from('pages')
             .select('*')
-            .eq('notebook_id', notebook_id);
+            .eq('notebook_id', notebook_id)
+            .order('created_at', { ascending: true });
         if (error)
             return NextResponse.json({ success: false, error, message: "Error fetching notes" }, { status: 500 });
         return NextResponse.json({ sucess: true, data });
