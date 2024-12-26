@@ -126,3 +126,25 @@ export async function GET(req: NextRequest) {
     }
 
 }
+
+export async function DELETE(req: NextRequest) {
+    
+    const supabase = await createClient();
+    const page_id = req.nextUrl.searchParams.get('pageId');
+    const notebook_id = req.nextUrl.searchParams.get('notebookId');
+
+
+    try {
+        const { data, error } = await supabase
+            .from('pages')
+            .delete()
+            .eq('id', page_id)
+            .eq('notebook_id', notebook_id);
+        if (error)
+            return NextResponse.json({ success: false, error, message: "Error deleting note" }, { status: 500 });
+        return NextResponse.json({ success: true, message: "Page deleted successfully" });
+    } catch (error) {
+        console.error('Error deleting page:', error);
+        return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
+    }
+}

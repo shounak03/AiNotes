@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { EllipsisVertical, Pencil, Plus, Send, SendIcon, Settings, SquareArrowOutUpRight, Trash2 } from 'lucide-react'
 import AskAIButton from '@/components/AskAIButton'
-import ShareButton from '@/components/ShareButton'
+
 import Link from 'next/link'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { toast } from 'sonner'
+
 
 interface Page {
   id: string
@@ -89,6 +91,26 @@ export default function NotebookPage({ params }: Props) {
     });
   }
 
+  const deletePage = async(pageId:string) =>{
+    if(!pageId) {
+      toast.error('Error deleting page');
+      return;
+    };
+      console.log('Deleting page:', pageId);
+      
+      const response = await fetch(`/api/page?pageId=${pageId}&notebookId=${notebookId}`,{
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        toast.error('Failed to delete page');
+        throw new Error('Failed to delete page');
+      }
+      toast.success('Page deleted successfully');
+      location.reload();
+    }
+    
+
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="space-y-6">
@@ -144,7 +166,7 @@ export default function NotebookPage({ params }: Props) {
                         <EllipsisVertical className='cursor-pointer hover:bg-gray-300 rounded-sm' />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={(pageId) => deletePage(page.id)}>
                           <Trash2 size={20} strokeWidth={1.75} />
                           <span className="font-semibold">Delete page</span>
                         </DropdownMenuItem>
@@ -179,6 +201,6 @@ export default function NotebookPage({ params }: Props) {
           </Card>
         )}
       </div>
-    </div>
+  </div>
   )
 }
