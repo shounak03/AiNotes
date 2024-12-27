@@ -10,7 +10,7 @@ import AskAIButton from '@/components/AskAIButton'
 import Link from 'next/link'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { toast } from 'sonner'
-
+import {BeatLoader} from 'react-spinners'
 
 interface Page {
   id: string
@@ -40,7 +40,8 @@ export default function NotebookPage({ params }: Props) {
   const [name, setName] = useState<string>("")
   const [notebookId, setNotebookId] = useState<string>("")
   const [pageHistory, setPageHistory] = useState<Page[]>([])
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null);
+  const [loading,setLoading] = useState<boolean>(false);
 
   const getParams = async () => {
     const { name } = await params;
@@ -53,6 +54,7 @@ export default function NotebookPage({ params }: Props) {
 
   const fetchPages = async () => {
     try {
+      setLoading(true);
       const response = await fetch(`/api/page?notebookId=${notebookId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch pages');
@@ -63,13 +65,17 @@ export default function NotebookPage({ params }: Props) {
       console.error('Error fetching pages:', error);
       setError(error instanceof Error ? error.message : 'An error occurred');
       return [];
+    }finally{
+      setLoading(false);
     }
   }
 
   useEffect(() => {
+    setLoading(true);
     getParams().then((after) => {
       setNotebookId(after);
     });
+    
   }, [name]);
 
   useEffect(() => {
@@ -77,6 +83,7 @@ export default function NotebookPage({ params }: Props) {
       fetchPages().then((data) => {
         console.log('Setting pageHistory:', data); // Debug log
         setPageHistory(data);
+        setLoading(false);
       });
     }
   }, [notebookId]);
@@ -92,11 +99,12 @@ export default function NotebookPage({ params }: Props) {
   }
 
   const deletePage = async(pageId:string) =>{
+
     if(!pageId) {
       toast.error('Error deleting page');
       return;
     };
-      console.log('Deleting page:', pageId);
+
       
       const response = await fetch(`/api/page?pageId=${pageId}&notebookId=${notebookId}`,{
         method: 'DELETE',
@@ -107,8 +115,15 @@ export default function NotebookPage({ params }: Props) {
       }
       toast.success('Page deleted successfully');
       location.reload();
+
     }
-    
+  
+    if(loading){
+      return <div className="flex justify-center items-center min-h-screen">
+      <BeatLoader color="#000000" size={35} />
+    </div>
+    }
+
 
 
   return (
@@ -163,7 +178,7 @@ export default function NotebookPage({ params }: Props) {
 
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <EllipsisVertical className='cursor-pointer hover:bg-gray-300 rounded-sm' />
+                        <EllipsisVertical className='cursor-pointer hover:bg-gray-100 rounded-sm' />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={(pageId) => deletePage(page.id)}>
@@ -183,11 +198,13 @@ export default function NotebookPage({ params }: Props) {
                   </p>
                 </CardHeader>
                 <CardContent>
-                  <Link href={"/"}>
-                    <Button size="sm" className='bg-white text-black hover:bg-gray-300 boder-2 '>
+                  <div  className='boder-2 border-gray-900'>
+                  <Link href={`/notebook/${name}/${page.title}/${page.id}`}>
+                    <Button size="sm" className='bg-white text-black hover:bg-gray-100 '>
                       <SendIcon className="mr-2 h-4 w-4" /> View Page
                     </Button>
                   </Link>
+                  </div>
                 </CardContent>
               </Card>
             ))}

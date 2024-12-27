@@ -116,7 +116,7 @@ export async function GET(req: NextRequest) {
             .from('pages')
             .select('*')
             .eq('notebook_id', notebook_id)
-            .order('created_at', { ascending: true });
+            .order('created_at', { ascending: false });
         if (error)
             return NextResponse.json({ success: false, error, message: "Error fetching notes" }, { status: 500 });
         return NextResponse.json({ sucess: true, data });
@@ -128,7 +128,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-    
+
     const supabase = await createClient();
     const page_id = req.nextUrl.searchParams.get('pageId');
     const notebook_id = req.nextUrl.searchParams.get('notebookId');
