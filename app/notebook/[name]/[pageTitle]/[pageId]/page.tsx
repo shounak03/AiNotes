@@ -13,10 +13,7 @@ async function page({params}:Props) {
 
   const {name, pageTitle, pageId} = await params;
   return (
-    // <div>page title - {pageTitle} 
-    //       pageid = {pageId}
-    //       name = {name}
-    // </div>
+   
     <DisplayPage pageId={pageId } name={name}/>
   )
 }

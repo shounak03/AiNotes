@@ -2,7 +2,7 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, LogOut } from 'lucide-react';
 
 interface Props {
   pageId: string;
@@ -42,13 +42,39 @@ const DisplayPage = ({ pageId, name }: Props) => {
       setLoading(false);
     }
   }
-
+  async function getSummary() {
+    try {
+      setLoading(true);
+      const res = await fetch(`/api/summary?id=${pageId}`);
+      const data = await res.json();
+      setSummary(data);
+    }catch (error) {}
+  }
   // Initialize edited content when switching to edit mode
   const handleEditClick = () => {
     setEditedContent(pageData?.data?.content || '');
     setIsEditing(true);
   };
+  async function generateSummary() {
+    setLoading(true);
+      try {
+        const res = await fetch(`/api/summary?id=${pageId}`, {
+          method: 'POST',
+        });
+        const data = await res.json();
+        setSummary(data);
 
+        console.log(data);
+      } catch (error) {
+          console.log(error);
+          
+      }finally{
+        setLoading(false);
+        // setShowSummary(true);
+      }
+      
+      
+  }
   const getDaysAgo = (dateString: string) => {
     const updatedDate = new Date(dateString);
     const now = new Date();
@@ -85,15 +111,16 @@ const DisplayPage = ({ pageId, name }: Props) => {
 
   useEffect(() => {
     getPageContent();
+    getSummary();
   }, [pageId]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="w-8 h-8 animate-spin" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex items-center justify-center h-screen">
+  //       <Loader2 className="w-8 h-8 animate-spin" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen bg-white">
@@ -101,7 +128,11 @@ const DisplayPage = ({ pageId, name }: Props) => {
       <header className="border-b border-gray-200 bg-white">
         <div className="p-4 mx-auto max-w-7xl">
           <h1 className="text-3xl font-bold text-gray-900">
+            <div className='flex justify-between capitalize'>
+
             {pageData?.data?.title || 'Loading...'}
+            <Button onClick={()=>(setShowSummary(!showSummary))} size={"lg"}> Summary</Button>
+            </div>
           </h1>
           <div className="mt-2 text-sm text-gray-500">
             Last updated: {pageData?.data?.updated_at && getDaysAgo(pageData?.data?.updated_at)}
@@ -136,10 +167,15 @@ const DisplayPage = ({ pageId, name }: Props) => {
           {showSummary && (
             <div className="w-1/2">
               <div className="border rounded-lg p-4 bg-white">
+                <div className="flex justify-between">
+
                 <h2 className="text-xl font-semibold mb-4">Summary</h2>
-                <div className="prose">
-                  {summary}
+                <LogOut onClick={() =>setShowSummary(false)} width="20px" cursor="pointer"/>
                 </div>
+                <div className="prose">
+                  {summary?.summary || 'No summary available'}
+                </div>
+                <Button onClick={generateSummary} className='mt-4'>{loading?<Loader2 className='animate-spin'/>:"Generate new Summary"}</Button>
               </div>
             </div>
           )}
