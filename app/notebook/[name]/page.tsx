@@ -132,8 +132,12 @@ export default function NotebookPage({ params }: Props) {
         <div className="flex justify-between items-center">
           <h1 className="text-4xl font-bold capitalize">{name}</h1>
           <div className="flex items-center space-x-4">
-            
-            <AskAIButton />
+
+            <Link href={`${name}/chat`}>
+                <Button>
+                  Ask AI
+                </Button>
+            </Link>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

@@ -32,7 +32,7 @@ export default async function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full border-2 border-gray-600">
                 <img
-                  src="/zen.jpeg"
+                  src="/boy3.png"
                   alt="User profile"
                   className="rounded-full"
                   width={42}
