@@ -2,7 +2,7 @@ import { generateEmbeddings, generateSummary } from "@/utils/ai";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (req: NextRequest) => {
+export const PUT = async (req: NextRequest) => {
     try {
         const supabase = await createClient();
 
@@ -31,14 +31,10 @@ export const POST = async (req: NextRequest) => {
         }
         const summary = await generateSummary(Page.content);
 
-        await supabase
-            .from('pages')
-            .update({ summary })
-            .eq('id', id);
-
+        
         return NextResponse.json({ success: true, summary }, { status: 200 });
     } catch (error) {
-        console.error('Error generating summary:', error);
+
         return NextResponse.json({ success: false, message: "Something went wrong" }, { status: 500 });
     }
 }
@@ -67,6 +63,30 @@ export const GET = async (req: NextRequest) => {
         }
         return NextResponse.json({ success: true, summary: Page.summary }, { status: 200 });
     } catch (error) {
+        return NextResponse.json({ success: false, message: "Something went wrong" }, { status: 500 });
+    }
+}
+
+export const POST = async (req: NextRequest) => {
+    try {
+        const supabase = await createClient();
+        const body = await req.json();
+        const { pageId, summary} = body;
+        if (!pageId || !summary)
+            return new Response('Missing id or summary', { status: 400 });
+       
+        const { data, error } = await supabase.from('pages').update({ summary }).eq('id',pageId)
+        if (error) {
+            return NextResponse.json({
+                success: false,
+                error: error.message,
+                message: "Error Updating Page"
+                }, { status: 500 });
+        }
+        return NextResponse.json({ success: true, message: "Page updated successfully" }, { status:200})
+    } catch (error) {
+
+        return NextResponse.json({ success: false, message: "Something went wrong",error }, { status: 500 });
         
     }
 }

@@ -24,3 +24,29 @@ export async function GET(req: NextRequest) {
     }
 
 }
+
+export async function POST(req: NextRequest) {
+    try {
+        const supabase = await createClient();
+        const body = await req.json();
+        const { pageId, content} = body;
+        console.log(pageId, content);
+        
+        const { data, error } = await supabase
+        .from("pages")
+        .update({ content })
+        .eq("id", pageId)
+        .single();
+
+        if (error) {
+            console.log(error);
+            
+            return NextResponse.json({ success: false, error, message: "Error updating notes" }, { status: 500 });
+        }
+        return NextResponse.json({ success: true, data }, { status: 200 });
+    
+
+    } catch (error) {
+        return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
+    }
+}

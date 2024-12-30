@@ -1,8 +1,9 @@
 
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, LogOut } from 'lucide-react';
+import {  Loader2, LogOut } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Props {
   pageId: string;
@@ -28,6 +29,8 @@ const DisplayPage = ({ pageId, name }: Props) => {
   const [summary, setSummary] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const [save,setSave] = useState(false)
 
   async function getPageContent() {
     try {
@@ -50,16 +53,17 @@ const DisplayPage = ({ pageId, name }: Props) => {
       setSummary(data);
     }catch (error) {}
   }
-  // Initialize edited content when switching to edit mode
+
   const handleEditClick = () => {
     setEditedContent(pageData?.data?.content || '');
     setIsEditing(true);
   };
+  
   async function generateSummary() {
     setLoading(true);
       try {
         const res = await fetch(`/api/summary?id=${pageId}`, {
-          method: 'POST',
+          method: 'PUT',
         });
         const data = await res.json();
         setSummary(data);
@@ -70,7 +74,7 @@ const DisplayPage = ({ pageId, name }: Props) => {
           
       }finally{
         setLoading(false);
-        // setShowSummary(true);
+        setSave(true);
       }
       
       
@@ -84,8 +88,10 @@ const DisplayPage = ({ pageId, name }: Props) => {
   };
 
   const handleSave = async () => {
+    console.log(editedContent);
+    
     try {
-      const response = await fetch('/api/page/updateContent', {
+      const res = await fetch('/api/page/pageContent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,35 +102,55 @@ const DisplayPage = ({ pageId, name }: Props) => {
         }),
       });
 
-      if (!response.ok) {
+      if (!res.ok) {
+        toast.error('Failed to update content');
         throw new Error('Failed to update content');
+
       }
 
       
       setPageData(prev => prev ? {...prev, content: editedContent} : null);
-      setIsEditing(false);
+      
       getPageContent(); 
     } catch (error) {
       console.error('Error saving content:', error);
+    }finally{
+      setIsEditing(false);
+      toast.success('Content updated successfully');
     }
   };
+
+  
+  
+  
+  const saveSummary = async () => {
+      try {
+        const res = await fetch(`/api/summary`,{
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({pageId, summary: summary?.summary})
+        })
+        if(!res.ok)
+          return toast.error('Failed to update summary');
+        toast.success('summary updated successfully')
+        setSave(false)
+      } catch (error) {
+        console.log(error);
+        
+        toast.error('Failed to update summary');
+      }
+    
+  }
+  
 
   useEffect(() => {
     getPageContent();
     getSummary();
   }, [pageId]);
 
-  // if (loading) {
-  //   return (
-  //     <div className="flex items-center justify-center h-screen">
-  //       <Loader2 className="w-8 h-8 animate-spin" />
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
+
       <header className="border-b border-gray-200 bg-white">
         <div className="p-4 mx-auto max-w-7xl">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -140,22 +166,22 @@ const DisplayPage = ({ pageId, name }: Props) => {
         </div>
       </header>
 
-      {/* Main Content */}
+
       <main className="p-4 mx-auto max-w-7xl">
         <div className="flex gap-4">
-          {/* Content Section */}
+
           <div className={`${showSummary ? 'w-1/2' : 'w-full'}`}>
             <div className="border rounded-lg p-4 bg-white">
               {isEditing ? (
                 <textarea
                   value={editedContent}
                   onChange={(e) => setEditedContent(e.target.value)}
-                  className="w-full h-96 p-2 border rounded-md font-mono text-base"
+                  className="w-full h-96 p-2"
                 />
               ) : (
                 <div 
                   className="prose max-w-none cursor-pointer min-h-[24rem]"
-                  // onClick={handleEditClick}
+
                 >
                   {pageData?.data?.content || 'No content available'}
                 </div>
@@ -163,24 +189,31 @@ const DisplayPage = ({ pageId, name }: Props) => {
             </div>
           </div>
 
-          {/* Summary Section */}
+
           {showSummary && (
             <div className="w-1/2">
               <div className="border rounded-lg p-4 bg-white">
                 <div className="flex justify-between">
 
                 <h2 className="text-xl font-semibold mb-4">Summary</h2>
-                <LogOut onClick={() =>setShowSummary(false)} width="20px" cursor="pointer"/>
+                <LogOut onClick={() => setShowSummary(false)} width="20px" cursor="pointer"/>
                 </div>
                 <div className="prose">
                   {summary?.summary || 'No summary available'}
                 </div>
-                <Button onClick={generateSummary} className='mt-4'>{loading?<Loader2 className='animate-spin'/>:"Generate new Summary"}</Button>
+                <div className="space-x-3">
+
+                <Button onClick={generateSummary} disabled={loading} className='mt-4'>{loading ? 'Generating...':"Generate new Summary"}</Button>
+               {save &&  <Button onClick={() => {startTransition(() => {saveSummary()})}} 
+                        className='mt-4'>
+                        {isPending ? <Loader2 className='animate-spin'/>:"Save summary"}
+                </Button>}
+                </div>
               </div>
             </div>
           )}
         </div>
-        <div className="flex mt-4 justify-between">
+        <div className="space-x-4 mt-4">
           {!isEditing &&
             <Button size={"lg"} onClick={() => handleEditClick()}> 
              Edit

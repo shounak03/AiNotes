@@ -3,17 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        // 1. Log the start of the request
-        console.log('Starting POST request to /api/page');
-        
-        // 2. Create Supabase client and get user
+
         const supabase = await createClient();
         const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-        console.log('Authenticated user:', user);
         
-        
-        // 3. Check for authentication errors
         if (authError) {
             console.error('Auth error:', authError);
             return NextResponse.json({
@@ -29,7 +22,6 @@ export async function POST(req: NextRequest) {
             }, {status: 401});
         }
 
-        // 4. Parse and validate request body
         const body = await req.json();
         console.log('Received request body:', body);
         
