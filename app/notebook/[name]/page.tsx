@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { EllipsisVertical, Pencil, Plus, Send, SendIcon, Settings, SquareArrowOutUpRight, Trash2 } from 'lucide-react'
-import AskAIButton from '@/components/AskAIButton'
+
 
 import Link from 'next/link'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'

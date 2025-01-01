@@ -26,8 +26,8 @@ export const PUT = async (req: NextRequest) => {
         }
 
         if (!Page.embedding) {
-            const embeddings = await generateEmbeddings(Page.content);
-            await supabase.from('pages').update({ embeddings }).eq('id', id)
+            const embedding = await generateEmbeddings(Page.content);
+            await supabase.from('pages').update({ embedding }).eq('id', id)
         }
         const summary = await generateSummary(Page.content);
 
