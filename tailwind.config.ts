@@ -9,6 +9,11 @@ export default {
   ],
   theme: {
   	extend: {
+		backgroundImage: {
+			'custom-gradient': 'linear-gradient(to right top, #2d144d, #2d1348, #2d1344, #2c123f, #2b123b, #291238, #281234, #261231, #23122e, #20122a, #1d1227, #1b1223)',
+
+			"custom-gradient-1": "radial-gradient(circle, #1e0c22, #200c26, #220b2b, #240a30, #260935)"
+		  },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

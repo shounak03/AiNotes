@@ -18,9 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-col min-h-screen">
+        <div className=" min-h-screen bg-custom-gradient-1">
           <Header />
-          <main className="flex-grow container mx-auto px-4 py-8">
+          <main className="flex-grow p-10" >
             {children}
           </main>
           <Toaster />
