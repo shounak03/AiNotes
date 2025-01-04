@@ -31,9 +31,9 @@ export default async function Header() {
         </Link>
         {user!==null ? (
           <div className="flex items-center space-x-4">
-            <Link href={'/'}>
+            <Link href={'/notebook/chat'}>
               <Button variant="ghost" size="icon" className="rounded-full border-2 text-black bg-violet-100 border-white">
-                  Ai
+                  AI
               </Button>
             </Link>
             <Link href="/notebook">

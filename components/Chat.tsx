@@ -5,10 +5,6 @@ import { MessageSquare, ChevronDown, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
 
-interface Props {
-    name: string
-}
-
 interface NotebookData {
     id: number
     name: string
@@ -19,7 +15,7 @@ interface Message {
     type: 'user' | 'assistant'
 }
 
-const ChatInterface = ({ name }: Props) => {
+const ChatInterface = () => {
     const [selectedNotebook, setSelectedNotebook] = useState('Select Notebook');
     const [messages, setMessages] = useState<Message[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -103,11 +99,11 @@ const ChatInterface = ({ name }: Props) => {
 
     return (
         <div className="flex flex-col h-[calc(100vh-86px)]">
-            <div className="bg-white border-b border-gray-200 py-2 px-4 flex-shrink-0">
+            <div className="bg-violet-100 border-b border-gray-200 py-2 px-4 flex-shrink-0">
                 <div className="max-w-2xl mx-auto relative">
                     <button
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        className="flex items-center justify-center space-x-2 mx-auto text-gray-700 hover:text-gray-900 font-medium text-sm"
+                        className="flex items-center justify-center space-x-2 mx-auto text-gray-700 hover:text-gray-900 font-medium text-lg capitalize"
                     >
                         <span>{selectedNotebook}</span>
                         <ChevronDown className="w-4 h-4" />
@@ -137,7 +133,7 @@ const ChatInterface = ({ name }: Props) => {
                     {messages.length === 0 ? (
                         <div className="text-center space-y-4">
                             <div className="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mx-auto">
-                                <MessageSquare className="w-6 h-6 text-blue-500" />
+                                <MessageSquare className="w-6 h-6 text-purple-700" />
                             </div>
                             <div className="space-y-2">
                                 <h3 className="text-base font-semibold text-gray-900">Chat with your notes</h3>
@@ -159,8 +155,8 @@ const ChatInterface = ({ name }: Props) => {
                                     <div
                                         className={`max-w-[80%] rounded-lg px-4 py-3 ${
                                             message.type === 'user'
-                                                ? 'bg-blue-500 text-white'
-                                                : 'bg-white shadow-sm border border-gray-100'
+                                                ? 'bg-purple-700 text-white'
+                                                : 'bg-violet-100 shadow-sm border border-gray-100'
                                         }`}
                                     >
                                         {message.type === 'user' ? (
@@ -226,8 +222,8 @@ const ChatInterface = ({ name }: Props) => {
                     <button
                         onClick={handleSend}
                         disabled={isLoading || !input.trim() || selectedNotebook === 'Select Notebook'}
-                        className="flex-shrink-0 rounded-lg bg-blue-500 p-2 text-white hover:bg-blue-600 
-                        disabled:bg-blue-300 disabled:cursor-not-allowed
+                        className="flex-shrink-0 rounded-lg bg-purple-700 p-2 text-white hover:bg-blue-600 
+                        disabled:bg-purple-300 disabled:cursor-not-allowed
                         mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                         <Send className="w-6 h-6" />

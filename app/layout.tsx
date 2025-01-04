@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import {Toaster} from 'sonner'
+import { checkIsPublicPage } from '@/lib/utils'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -10,13 +11,16 @@ export const metadata = {
   description: 'An AI-powered note-taking application',
 }
 
+
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const isPublicPage = checkIsPublicPage()
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <div className=" min-h-screen bg-custom-gradient-3">
           <Header />
@@ -24,7 +28,7 @@ export default function RootLayout({
             {children}
           </main>
           <Toaster />
-          <Footer />
+          {!isPublicPage && <Footer />}
         </div>
         
 

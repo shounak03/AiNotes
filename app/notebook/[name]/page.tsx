@@ -4,13 +4,13 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { EllipsisVertical, Pencil, Plus, Send, SendIcon, Settings, Share, Share2, SquareArrowOutUpRight, Trash2 } from 'lucide-react'
-
+import { EllipsisVertical, Pencil, Plus, SendIcon, Share2, Trash2 } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 import Link from 'next/link'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { toast } from 'sonner'
-import {BeatLoader} from 'react-spinners'
+import { BeatLoader } from 'react-spinners'
 
 interface Page {
   id: string
@@ -37,11 +37,23 @@ type Props = {
 }
 
 export default function NotebookPage({ params }: Props) {
+  const path = usePathname()
+  const [route, setRoute] = useState<string>(path)
   const [name, setName] = useState<string>("")
   const [notebookId, setNotebookId] = useState<string>("")
   const [pageHistory, setPageHistory] = useState<Page[]>([])
   const [error, setError] = useState<string | null>(null);
-  const [loading,setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+
+  function shareRoute() {
+    const sharableLink = `${window.location.origin}${route}`;
+    navigator.clipboard.writeText(sharableLink).then(() => {
+      toast.success('Link copied to clipboard!');
+    }).catch(err => {
+      toast.error('Failed to copy the link');
+    });
+  }
 
   const getParams = async () => {
     const { name } = await params;
@@ -65,7 +77,7 @@ export default function NotebookPage({ params }: Props) {
       console.error('Error fetching pages:', error);
       setError(error instanceof Error ? error.message : 'An error occurred');
       return [];
-    }finally{
+    } finally {
       setLoading(false);
     }
   }
@@ -75,13 +87,12 @@ export default function NotebookPage({ params }: Props) {
     getParams().then((after) => {
       setNotebookId(after);
     });
-    
+
   }, [name]);
 
   useEffect(() => {
     if (notebookId) {
       fetchPages().then((data) => {
-        console.log('Setting pageHistory:', data); // Debug log
         setPageHistory(data);
         setLoading(false);
       });
@@ -98,31 +109,31 @@ export default function NotebookPage({ params }: Props) {
     });
   }
 
-  const deletePage = async(pageId:string) =>{
+  const deletePage = async (pageId: string) => {
 
-    if(!pageId) {
+    if (!pageId) {
       toast.error('Error deleting page');
       return;
     };
 
-      
-      const response = await fetch(`/api/page?pageId=${pageId}&notebookId=${notebookId}`,{
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        toast.error('Failed to delete page');
-        throw new Error('Failed to delete page');
-      }
-      toast.success('Page deleted successfully');
-      location.reload();
 
+    const response = await fetch(`/api/page?pageId=${pageId}&notebookId=${notebookId}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      toast.error('Failed to delete page');
+      throw new Error('Failed to delete page');
     }
-  
-    if(loading){
-      return <div className="flex justify-center items-center min-h-screen">
+    toast.success('Page deleted successfully');
+    location.reload();
+
+  }
+
+  if (loading) {
+    return <div className="flex justify-center items-center min-h-screen">
       <BeatLoader color="#000000" size={35} />
     </div>
-    }
+  }
 
 
 
@@ -133,27 +144,13 @@ export default function NotebookPage({ params }: Props) {
           <h1 className="text-4xl font-bold text-violet-100 capitalize">{name}</h1>
           <div className="flex items-center space-x-4">
 
-            <Link href={`${name}/chat`}>
-                <Button>
-                  Ask AI
-                </Button>
+            <Link href={`/chat`}>
+              <Button>
+                Ask AI
+              </Button>
             </Link>
-            
-            {/* <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Settings size={25} strokeWidth={1.75} cursor={"pointer"} />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent >
-                <DropdownMenuItem>
-                  <SquareArrowOutUpRight /> <span className='font-semibold'>Share Notes</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Pencil size={20} strokeWidth={1.75} /> <span className='font-semibold'>Edit</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu> */}
 
-            <Share2 size={20} strokeWidth={1.75} cursor={"pointer"} color='white' />
+            <Share2 size={20} strokeWidth={1.75} cursor={"pointer"} color='white' onClick={shareRoute} />
 
           </div>
         </div>
@@ -204,12 +201,12 @@ export default function NotebookPage({ params }: Props) {
                   </p>
                 </CardHeader>
                 <CardContent>
-                  <div  className='boder-2 border-gray-900'>
-                  <Link href={`/notebook/${name}/${page.title}/${page.id}`}>
-                    <Button size="sm" className='bg-white text-black hover:bg-gray-100 '>
-                      <SendIcon className="mr-2 h-4 w-4" /> View Page
-                    </Button>
-                  </Link>
+                  <div className='boder-2 border-gray-900'>
+                    <Link href={`/notebook/${name}/${page.title}/${page.id}`}>
+                      <Button size="sm" className='bg-white text-black hover:bg-gray-100 '>
+                        <SendIcon className="mr-2 h-4 w-4" /> View Page
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -224,6 +221,6 @@ export default function NotebookPage({ params }: Props) {
           </Card>
         )}
       </div>
-  </div>
+    </div>
   )
 }
