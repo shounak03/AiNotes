@@ -3,16 +3,17 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Brain, Sparkles, Zap, MessageSquare } from "lucide-react";
+import Link from 'next/link';
 
 const LandingPage = () => {
   return (
-    // <main className="min-h-screen space-y-8 p-4 bg-gradient-to-br from-blue-200 to-indigo-200">
-    <main className="min-h-screen space-y-8 violet-100">
-      {/* Hero Section with Grid Background */}
-      <section className="border-separate border-4 border-spacing-2 border-indigo-700 rounded-3xl p-2">
+
+    <main className="min-h-screen space-y-8 p-16">
+
+      <section className="border-separate border-4 border-spacing-2 border-white rounded-3xl p-2">
 
 
-        <section className="relative overflow-hidden  bg-slate-900 border-2  border-indigo-700 rounded-3xl p-24">
+        <section className="relative overflow-hidden  bg-slate-900 border-2  border-black rounded-3xl p-24">
 
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px]">
             <div className="absolute inset-0 bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20"></div>
@@ -25,16 +26,18 @@ const LandingPage = () => {
               </span>
               <h1 className="text-6xl font-bold text-white">
                  Your Notes,
-                 {/*<span className="text-transparent bg-clip-text bg-black">Supercharged</span> */}
+
                 <span className="text-transparent bg-clip-text bg-custom-gradient-1">Supercharged</span>
               </h1>
               <p className="text-xl text-gray-300 max-w-2xl mx-auto">
                 Transform your thoughts into organized knowledge with AI assistance. Seamlessly create, summarize, and interact with your notes.
               </p>
               <div className="flex gap-4 justify-center">
-                <Button size="lg" className="bg-violet-500 hover:bg-violet-600">
-                  Start Taking Notes
-                </Button>
+                <Link href='/notebook'>
+                  <Button size="lg" className="bg-violet-100 text-gray-900 hover:bg-white">
+                    Start Taking Notes
+                  </Button>
+                </Link>
                 
               </div>
             </div>
@@ -42,8 +45,8 @@ const LandingPage = () => {
         </section>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-20 px-4 border-4 border-indigo-700 rounded-3xl bg-gray-900">
+
+      <section className="py-20 px-4  border-white rounded-3xl bg-gray-900">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card className="bg-slate-800/50 border-slate-700 hover:border-violet-500/50 transition-all p-6">
             <CardContent className="space-y-4 p-0">
@@ -87,13 +90,13 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4 border-4 border-indigo-700 rounded-3xl bg-gray-900">
+
+      <section className="py-20 px-4 border-1 border-indigo-700 rounded-3xl bg-gray-900">
         <div className="max-w-4xl mx-auto text-center space-y-8">
-          <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+          <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-100 to-fuchsia-300">
             Start Writing Smarter Today
           </h2>
-          <p className="text-xl text-gray-300">
+          <p className="text-xl text-violet-100">
             Join thousands of professionals who've elevated their note-taking with AI.
           </p>
           <Button size="lg" className="bg-violet-500 hover:bg-violet-600">

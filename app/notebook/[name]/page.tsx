@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { EllipsisVertical, Pencil, Plus, Send, SendIcon, Settings, SquareArrowOutUpRight, Trash2 } from 'lucide-react'
+import { EllipsisVertical, Pencil, Plus, Send, SendIcon, Settings, Share, Share2, SquareArrowOutUpRight, Trash2 } from 'lucide-react'
 
 
 import Link from 'next/link'
@@ -127,10 +127,10 @@ export default function NotebookPage({ params }: Props) {
 
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4">
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-4xl font-bold capitalize">{name}</h1>
+          <h1 className="text-4xl font-bold text-violet-100 capitalize">{name}</h1>
           <div className="flex items-center space-x-4">
 
             <Link href={`${name}/chat`}>
@@ -139,7 +139,7 @@ export default function NotebookPage({ params }: Props) {
                 </Button>
             </Link>
             
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Settings size={25} strokeWidth={1.75} cursor={"pointer"} />
               </DropdownMenuTrigger>
@@ -151,7 +151,9 @@ export default function NotebookPage({ params }: Props) {
                   <Pencil size={20} strokeWidth={1.75} /> <span className='font-semibold'>Edit</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
+
+            <Share2 size={20} strokeWidth={1.75} cursor={"pointer"} color='white' />
 
           </div>
         </div>

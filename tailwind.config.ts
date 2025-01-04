@@ -12,7 +12,9 @@ export default {
 		backgroundImage: {
 			'custom-gradient': 'linear-gradient(to right top, #2d144d, #2d1348, #2d1344, #2c123f, #2b123b, #291238, #281234, #261231, #23122e, #20122a, #1d1227, #1b1223)',
 
-			"custom-gradient-1": "radial-gradient(circle, #1e0c22, #200c26, #220b2b, #240a30, #260935)"
+			"custom-gradient-1": "radial-gradient(circle, #1e0c22, #200c26, #220b2b, #240a30, #260935)",
+			"custom-gradient-2": "radial-gradient(circle, #dff2eb, #d6efe9, #ccece8, #c2e8e7, #b9e5e8)",
+			"custom-gradient-3": "linear-gradient(to right top, #d0cfd9, #adaabe, #8d85a3, #706287, #54406c, #47315f, #392253, #2c1447, #271446, #221345, #1d1343, #171242);",
 		  },
   		colors: {
   			background: 'hsl(var(--background))',

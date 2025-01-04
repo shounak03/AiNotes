@@ -8,11 +8,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
-// Mock data for notebooks
-
-
-
-
     
 export default function CreateNotebook() {
     const [isNewSpaceDialogOpen, setIsNewSpaceDialogOpen] = useState(false)
@@ -47,8 +42,8 @@ export default function CreateNotebook() {
 
   return (
     <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold">Your Notebooks</h1>
-                <Button onClick={() => setIsNewSpaceDialogOpen(true)}>
+                <h1 className="text-3xl font-bold text-violet-100">Your Notebooks</h1>
+                <Button onClick={() => setIsNewSpaceDialogOpen(true)} className='bg-violet-100 text-black'>
                     <Plus className="mr-2 h-4 w-4" /> New Notebook
                 </Button>
                 <Dialog open={isNewSpaceDialogOpen} onOpenChange={setIsNewSpaceDialogOpen}>

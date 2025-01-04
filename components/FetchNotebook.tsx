@@ -2,8 +2,9 @@
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useEffect, useState } from 'react'
+import { Send } from 'lucide-react'
 
-interface notes{
+interface notes {
     id: number,
     name: string,
     description: string
@@ -22,22 +23,27 @@ export default function FetchNotebook() {
 
     useEffect(() => {
         fetchNotebook()
-    },[])
+    }, [])
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {notes?.map((data) => (
-        <Link  href={{pathname:`/notebook/${(data?.name)}`,query:{id:data?.id},}} as={`/notebook/${(data?.name)}-${data?.id}`} key={data?.id}>
-            <Card className="hover:shadow-md transition-shadow hover:bg-gray-200">
-                <CardHeader>
-                    <CardTitle>{data?.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-sm text-gray-500">{data?.description} pages</p>
-                </CardContent>
-            </Card>
-        </Link>
-    ))}
-</div>
-  )
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+            {notes?.map((data) => (
+                <Link href={{ pathname: `/notebook/${(data?.name)}`, query: { id: data?.id }, }} as={`/notebook/${(data?.name)}-${data?.id}`} key={data?.id}>
+                    <Card className="hover:shadow-md transition-shadow hover:bg-gray-200 bg-violet-100">
+                        <CardHeader>
+                            <div className='flex justify-between'>
+                                <CardTitle>{data?.name}</CardTitle>
+
+                                <Send />
+
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-gray-500">{data?.description} pages</p>
+                        </CardContent>
+                    </Card>
+                </Link>
+            ))}
+        </div>
+    )
 }   
