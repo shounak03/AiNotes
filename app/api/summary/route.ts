@@ -1,4 +1,4 @@
-import { generateEmbeddings, generateSummary } from "@/utils/ai";
+import {  generateSummary } from "@/utils/ai";
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -25,10 +25,10 @@ export const PUT = async (req: NextRequest) => {
             }, { status: 404 });
         }
 
-        if (!Page.embedding) {
-            const embedding = await generateEmbeddings(Page.content);
-            await supabase.from('pages').update({ embedding }).eq('id', id)
-        }
+        // if (!Page.embedding) {
+        //     const embedding = await generateEmbeddings(Page.content);
+        //     await supabase.from('pages').update({ embedding }).eq('id', id)
+        // }
         const summary = await generateSummary(Page.content);
 
         

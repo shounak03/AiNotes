@@ -10,7 +10,6 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes'
 
 interface Props {
   pageId: string;
-  name: string;
 }
 
 interface PageData {
@@ -27,7 +26,7 @@ interface Summary {
 
 
 
-const DisplayPage = ({ pageId, name }: Props) => {
+const DisplayPage = ({ pageId }: Props) => {
   const [pageData, setPageData] = useState<PageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showSummary, setShowSummary] = useState(false);
@@ -175,7 +174,7 @@ const DisplayPage = ({ pageId, name }: Props) => {
   }, [pageId]);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
 
     
     <div className=" bg-violet-200 dark:bg-gray-900 transition-colors duration-200 rounded-2xl">

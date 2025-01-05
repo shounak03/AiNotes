@@ -1,6 +1,6 @@
-import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
-import { createClient } from './supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
+
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
 const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
@@ -47,11 +47,11 @@ function formatSummary(text: string): string {
   return overview;
 }
 
-export async function generateEmbeddings(text: string): Promise<number[]> {
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-  const result = await model.embedContent(text);
-  return result.embedding;
-}
+// export async function generateEmbeddings(text: string): Promise<number[]> {
+//   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+//   const result = await model.embedContent(text);
+//   return result.embedding;
+// }
 
 
 export async function generateSummary(content: string): Promise<string> {
@@ -128,144 +128,144 @@ interface ChatOptions {
 //   }
 // }
 
-export async function searchSimilarPages(
-  query: string,
-  notebookId: string,
-  userId: string,
-  maxResults: number = 5,
-  similarityThreshold: number = 0.7
-): Promise<{ data: Page[] | null; error: PostgrestError | null }> {
-  try {
-    const supabase = await createClient();
-    const embeddings = await generateEmbeddings(query);
+// export async function searchSimilarPages(
+//   query: string,
+//   notebookId: string,
+//   userId: string,
+//   maxResults: number = 5,
+//   similarityThreshold: number = 0.7
+// ): Promise<{ data: Page[] | null; error: PostgrestError | null }> {
+//   try {
+//     const supabase = await createClient();
+//     const embeddings = await generateEmbeddings(query);
     
-    // console.log("embeddings = ",embeddings);
+//     // console.log("embeddings = ",embeddings);
     
-    const queryEmbedding = embeddings.values;
+//     const queryEmbedding = embeddings.values;
 
-    const { data, error } = await supabase.rpc('match_page_embeddings', {
-      query_embedding: queryEmbedding, // Pass the array directly
-      similarity_threshold: similarityThreshold,
-      match_count: maxResults,
-      p_notebook_id: notebookId,
-      p_user_id: userId
-    });
+//     const { data, error } = await supabase.rpc('match_page_embeddings', {
+//       query_embedding: queryEmbedding, // Pass the array directly
+//       similarity_threshold: similarityThreshold,
+//       match_count: maxResults,
+//       p_notebook_id: notebookId,
+//       p_user_id: userId
+//     });
 
-    return { data, error };
-  } catch (error) {
-    console.error('Error searching similar pages:', error);
-    return { data: null, error: error as PostgrestError };
-  }
-}
+//     return { data, error };
+//   } catch (error) {
+//     console.error('Error searching similar pages:', error);
+//     return { data: null, error: error as PostgrestError };
+//   }
+// }
 
-export async function generateChatResponse(
-  messages: ChatMessage[],
-  options: ChatOptions
-): Promise<{ response: string; error: string | null }> {
-  try {
+// export async function generateChatResponse(
+//   messages: ChatMessage[],
+//   options: ChatOptions
+// ): Promise<{ response: string; error: string | null }> {
+//   try {
 
-    console.log("messages = ",messages.length);
+//     console.log("messages = ",messages.length);
     
-    if (!Array.isArray(messages) || messages.length === 0) {
-      return {
-        response: '',
-        error: 'No messages provided'
-      };
-    }
+//     if (!Array.isArray(messages) || messages.length === 0) {
+//       return {
+//         response: '',
+//         error: 'No messages provided'
+//       };
+//     }
 
-    console.log("messages = ",messages[0].type);
-    console.log("messages = ",messages[0].content);
+//     console.log("messages = ",messages[0].type);
+//     console.log("messages = ",messages[0].content);
     
-    let userQuery = '';
-    for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i].type === 'user') {
-        userQuery = messages[i].content;
-        break;
-      }
-    }
+//     let userQuery = '';
+//     for (let i = messages.length - 1; i >= 0; i--) {
+//       if (messages[i].type === 'user') {
+//         userQuery = messages[i].content;
+//         break;
+//       }
+//     }
 
 
-    if (!userQuery) {
-      userQuery = messages[0].content;
-    }
+//     if (!userQuery) {
+//       userQuery = messages[0].content;
+//     }
 
-    console.log("query = ",userQuery);
+//     console.log("query = ",userQuery);
     
-    const { data: relevantPages, error: searchError } = await searchSimilarPages(
-      userQuery,
-      options.notebookId,
-      options.userId,
-      options.maxResults,
-      options.similarityThreshold
-    );
+//     const { data: relevantPages, error: searchError } = await searchSimilarPages(
+//       userQuery,
+//       options.notebookId,
+//       options.userId,
+//       options.maxResults,
+//       options.similarityThreshold
+//     );
 
-    if (searchError) throw searchError;
-    if (!relevantPages || relevantPages.length === 0) {
-      return {
-        response: "I couldn't find any relevant information in your notes to answer this question.",
-        error: null
-      };
-    }
+//     if (searchError) throw searchError;
+//     if (!relevantPages || relevantPages.length === 0) {
+//       return {
+//         response: "I couldn't find any relevant information in your notes to answer this question.",
+//         error: null
+//       };
+//     }
 
-    // Create context from relevant pages
-    const context = relevantPages.map(page => `
-          Title: ${page.title}
-          Content: ${page.content}
-          Summary: ${page.ai_summary}
-          ---
-        `).join('\n');
+//     // Create context from relevant pages
+//     const context = relevantPages.map(page => `
+//           Title: ${page.title}
+//           Content: ${page.content}
+//           Summary: ${page.ai_summary}
+//           ---
+//         `).join('\n');
 
 
-    const conversationHistory = messages
-      .filter(m => m.content?.trim()) 
-      .map(m => `${m.type}: ${m.content}`)
-      .join('\n');
+//     const conversationHistory = messages
+//       .filter(m => m.content?.trim()) 
+//       .map(m => `${m.type}: ${m.content}`)
+//       .join('\n');
 
-    const prompt = `You are an AI assistant helping users with their notes. 
-    Below is the relevant content from their notebook, found through semantic search:
+//     const prompt = `You are an AI assistant helping users with their notes. 
+//     Below is the relevant content from their notebook, found through semantic search:
     
-    ${context}
+//     ${context}
     
-    Previous conversation:
-    ${conversationHistory}
+//     Previous conversation:
+//     ${conversationHistory}
     
-    When answering:
-    1. Only use information from the provided notes
-    2. If the answer isn't in the notes, say so
-    3. Reference specific notes/sections in your answer
-    4. Keep responses clear and concise
+//     When answering:
+//     1. Only use information from the provided notes
+//     2. If the answer isn't in the notes, say so
+//     3. Reference specific notes/sections in your answer
+//     4. Keep responses clear and concise
     
-    User's question: ${userQuery}`;
+//     User's question: ${userQuery}`;
 
 
-    const model = genAI.getGenerativeModel({
-      model: "gemini-pro",
-      safetySettings: [
-        {
-          category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        },
-        {
-          category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-        },
-      ],
-    });
+//     const model = genAI.getGenerativeModel({
+//       model: "gemini-pro",
+//       safetySettings: [
+//         {
+//           category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+//           threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+//         },
+//         {
+//           category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+//           threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+//         },
+//       ],
+//     });
 
-    // Generate response
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
+//     // Generate response
+//     const result = await model.generateContent(prompt);
+//     const response = await result.response;
 
-    return {
-      response: response.text(),
-      error: null
-    };
+//     return {
+//       response: response.text(),
+//       error: null
+//     };
 
-  } catch (error) {
-    console.error('Error generating chat response:', error);
-    return {
-      response: '',
-      error: error instanceof Error ? error.message : 'Unknown error occurred'
-    };
-  }
-}
+//   } catch (error) {
+//     console.error('Error generating chat response:', error);
+//     return {
+//       response: '',
+//       error: error instanceof Error ? error.message : 'Unknown error occurred'
+//     };
+//   }
+// }

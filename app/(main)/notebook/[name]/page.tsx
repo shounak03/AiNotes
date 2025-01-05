@@ -36,7 +36,7 @@ type Props = {
   }
 }
 
-export default function NotebookPage({ params }: Props) {
+export default function NotebookPage({ params }:{ params: Promise<{ name: string}>}) {
   const path = usePathname()
   const [route, setRoute] = useState<string>(path)
   const [name, setName] = useState<string>("")

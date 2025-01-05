@@ -1,21 +1,17 @@
 
 import DisplayPage from '@/components/display-page'
-import React from 'react'
 
-interface Props {
-  params: {
-    name: string
-    pageTitle: string
-    pageId: string
-  }
-}
-async function page({params}:Props) {
 
-  const {name, pageTitle, pageId} = await params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{  pageId:string}>
+}) {
+
+  const { pageId} =  await params;
   return (
    
-    <DisplayPage pageId={pageId } name={name}/>
+    <DisplayPage pageId={pageId} />
   )
 }
 
-export default page
