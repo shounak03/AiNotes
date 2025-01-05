@@ -144,7 +144,7 @@ export default function NotebookPage({ params }:{ params: Promise<{ name: string
           <h1 className="text-4xl font-bold text-violet-100 capitalize">{name}</h1>
           <div className="flex items-center space-x-4">
 
-            <Link href={`/chat`}>
+            <Link href={`/notebook/chat`}>
               <Button>
                 Ask AI
               </Button>

@@ -16,6 +16,7 @@ interface Message {
 }
 
 const ChatInterface = () => {
+    
     const [selectedNotebook, setSelectedNotebook] = useState('Select Notebook');
     const [messages, setMessages] = useState<Message[]>([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
