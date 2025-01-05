@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Brain, Sparkles, Zap, MessageSquare } from "lucide-react";
 import Link from 'next/link';
+import './text.css'
 
 const LandingPage = () => {
   return (
@@ -27,7 +28,9 @@ const LandingPage = () => {
               <h1 className="text-6xl font-bold text-white">
                  Your Notes,
 
-                <span className="text-transparent bg-clip-text bg-custom-gradient-1">Supercharged</span>
+                <span className="text-6xl font-bold bg-gradient-to-r from-purple-600 via-blue-500 to-green-400 text-transparent bg-clip-text animate-gradient"
+                >
+                  Supercharged</span>
               </h1>
               <p className="text-xl text-gray-300 max-w-2xl mx-auto">
                 Transform your thoughts into organized knowledge with AI assistance. Seamlessly create, summarize, and interact with your notes.

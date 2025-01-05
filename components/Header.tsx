@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Settings, LogOut, BrainCircuit } from 'lucide-react'
 import { createClient } from '@/utils/supabase/server'
-import { logout } from '@/app/auth/action'
+import { logout } from '@/app/(auth)/auth/action'
 
 
 export default async function Header() {

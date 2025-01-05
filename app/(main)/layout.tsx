@@ -3,7 +3,7 @@ import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import {Toaster} from 'sonner'
-import { checkIsPublicPage } from '@/lib/utils'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -18,7 +18,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const isPublicPage = checkIsPublicPage()
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
@@ -28,7 +28,7 @@ export default function RootLayout({
             {children}
           </main>
           <Toaster />
-          {!isPublicPage && <Footer />}
+          <Footer />
         </div>
         
 

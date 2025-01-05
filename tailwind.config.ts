@@ -15,6 +15,7 @@ export default {
 			"custom-gradient-1": "radial-gradient(circle, #1e0c22, #200c26, #220b2b, #240a30, #260935)",
 			"custom-gradient-2": "radial-gradient(circle, #dff2eb, #d6efe9, #ccece8, #c2e8e7, #b9e5e8)",
 			"custom-gradient-3": "linear-gradient(to right top, #d0cfd9, #adaabe, #8d85a3, #706287, #54406c, #47315f, #392253, #2c1447, #271446, #221345, #1d1343, #171242);",
+			"text-color":"#000957"
 		  },
   		colors: {
   			background: 'hsl(var(--background))',
@@ -62,8 +63,8 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
-  	}
+  		},
+  	},
   },
   plugins: [require("tailwindcss-animate"),require('@tailwindcss/typography'),],
   
