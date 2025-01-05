@@ -178,7 +178,7 @@ const DisplayPage = ({ pageId, name }: Props) => {
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 
     
-    <div className=" bg-violet-100 dark:bg-gray-900 transition-colors duration-200 rounded-2xl">
+    <div className=" bg-violet-200 dark:bg-gray-900 transition-colors duration-200 rounded-2xl">
       <header className="border-b border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 rounded-2xl">
         <div className="p-4 mx-auto max-w-7xl">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">

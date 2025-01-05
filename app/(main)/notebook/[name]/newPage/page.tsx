@@ -88,12 +88,12 @@ export default function NewPage({ params }: Props) {
 }
 
 return (
-  <div className="container mx-auto px-4 py-8">
-    <Card className="max-w-3xl mx-auto">
+  <div className="container mx-auto px-4 py-8 min-h-[calc(100vh-theme(spacing.32))]">
+    <Card className="w-full h-[calc(100vh-theme(spacing.48))] mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">Create New Note</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 h-[calc(100%-theme(spacing.40))]">
         <div>
           <Input
             placeholder="Enter note title"
@@ -103,36 +103,15 @@ return (
             required
           />
         </div>
-        <div>
+        <div className="h-[calc(100%-theme(spacing.20))] overflow-hidden">
           <Textarea
             placeholder="Enter your note content here..."
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="min-h-[200px]"
+            className="h-full overflow-y-auto resize-none"
             required
           />
         </div>
-        <Collapsible open={isSummaryVisible} onOpenChange={setIsSummaryVisible}>
-          <CollapsibleTrigger asChild>
-            <Button variant="outline" className="w-full">
-              {isSummaryVisible ? 'Hide Summary' : 'Generate Summary'}
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="mt-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">AI-Generated Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {summary ? (
-                  <p>{summary}</p>
-                ) : (
-                  <Button onClick={generateSummary}>Generate Summary</Button>
-                )}
-              </CardContent>
-            </Card>
-          </CollapsibleContent>
-        </Collapsible>
       </CardContent>
       <CardFooter>
         <Button onClick={saveNote} className="w-full cursor-pointer"

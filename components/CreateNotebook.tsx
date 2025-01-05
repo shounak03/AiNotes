@@ -43,7 +43,7 @@ export default function CreateNotebook() {
   return (
     <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-violet-100">Your Notebooks</h1>
-                <Button onClick={() => setIsNewSpaceDialogOpen(true)} className='bg-violet-100 text-black'>
+                <Button onClick={() => setIsNewSpaceDialogOpen(true)} className='bg-violet-100 text-black hover:bg-white'>
                     <Plus className="mr-2 h-4 w-4" /> New Notebook
                 </Button>
                 <Dialog open={isNewSpaceDialogOpen} onOpenChange={setIsNewSpaceDialogOpen}>
